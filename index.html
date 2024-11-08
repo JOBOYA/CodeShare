@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeShare - Partagez votre code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 min-h-screen">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                    Code<span class="text-white">Share</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="https://github.com/votre-repo" target="_blank" class="text-gray-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                        <i class="fab fa-github text-xl"></i>
+                        GitHub
+                    </a>
+                    <button id="shortcutsBtn" class="text-gray-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                        <i class="fas fa-keyboard text-xl"></i>
+                        Raccourcis (Ctrl + H)
+                    </button>
+                    <a href="#editor-section" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-2 rounded-full hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2">
+                        <i class="fas fa-code"></i>
+                        Commencer à Coder
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ajoutez cette modale de raccourcis juste après la navbar -->
+    <div id="shortcutsModal" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-sm">
+        <div class="container mx-auto px-4 h-full flex items-center justify-center">
+            <div class="bg-slate-800 rounded-xl p-6 max-w-2xl w-full shadow-2xl border border-slate-700">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-white">Raccourcis Clavier</h3>
+                    <button id="closeShortcuts" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="text-cyan-400 font-semibold mb-2">Navigation</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Aller à la ligne</span>
+                                <span class="text-gray-400">Ctrl + L</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Rechercher</span>
+                                <span class="text-gray-400">Ctrl + F</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Remplacer</span>
+                                <span class="text-gray-400">Ctrl + H</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-cyan-400 font-semibold mb-2">Édition</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Commenter/Décommenter</span>
+                                <span class="text-gray-400">Ctrl + /</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Dupliquer la ligne</span>
+                                <span class="text-gray-400">Ctrl + D</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Supprimer la ligne</span>
+                                <span class="text-gray-400">Ctrl + Shift + K</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-cyan-400 font-semibold mb-2">Sélection</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Sélectionner tout</span>
+                                <span class="text-gray-400">Ctrl + A</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Multi-curseurs</span>
+                                <span class="text-gray-400">Ctrl + Click</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Sélection multiple</span>
+                                <span class="text-gray-400">Alt + Click</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-cyan-400 font-semibold mb-2">Actions Rapides</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Sauvegarder</span>
+                                <span class="text-gray-400">Ctrl + S</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Indenter</span>
+                                <span class="text-gray-400">Tab</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Désindenter</span>
+                                <span class="text-gray-400">Shift + Tab</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div id="matrix-bg" class="absolute inset-0 opacity-10"></div>
+        
+        <div class="container mx-auto px-6 z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 fade-in-left">
+                    <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight">
+                        Code<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Share</span>
+                    </h1>
+                    <div class="flex flex-wrap gap-4">
+                        <span class="px-4 py-2 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                            <i class="fas fa-share-alt mr-2"></i>Partage Simple
+                        </span>
+                        <span class="px-4 py-2 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
+                            <i class="fas fa-code mr-2"></i>Multi-langages
+                        </span>
+                        <span class="px-4 py-2 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                            <i class="fas fa-image mr-2"></i>Export PNG/JPG
+                        </span>
+                        <span class="px-4 py-2 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                            <i class="fas fa-paint-brush mr-2"></i>Thèmes
+                        </span>
+                    </div>
+                    <div class="flex justify-start space-x-6">
+                        <div class="tech-icon p-3 bg-slate-800/50 rounded-lg backdrop-blur-sm hover:bg-slate-800/70 transition-all">
+                            <i class="fab fa-js text-3xl text-yellow-400"></i>
+                        </div>
+                        <div class="tech-icon p-3 bg-slate-800/50 rounded-lg backdrop-blur-sm hover:bg-slate-800/70 transition-all">
+                            <i class="fab fa-python text-3xl text-blue-400"></i>
+                        </div>
+                        <div class="tech-icon p-3 bg-slate-800/50 rounded-lg backdrop-blur-sm hover:bg-slate-800/70 transition-all">
+                            <i class="fab fa-php text-3xl text-indigo-400"></i>
+                        </div>
+                        <div class="tech-icon p-3 bg-slate-800/50 rounded-lg backdrop-blur-sm hover:bg-slate-800/70 transition-all">
+                            <i class="fab fa-html5 text-3xl text-orange-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative fade-in-right">
+                    <div class="code-window bg-slate-800/50 backdrop-blur-sm p-6 rounded-xl border border-slate-700">
+                        <div class="flex space-x-2 mb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <pre class="text-sm text-gray-300 font-mono"><span class="text-pink-400">const</span> <span class="text-cyan-400">codeShare</span> = {
+    editeur: <span class="text-green-400">'intuitif'</span>,
+    langages: [<span class="text-green-400">'JS'</span>, <span class="text-green-400">'Python'</span>, <span class="text-green-400">'PHP'</span>],
+    fonctionnalités: {
+        export: <span class="text-green-400">'PNG/JPG'</span>,
+        thèmes: <span class="text-green-400">'multiples'</span>,
+        partage: <span class="text-green-400">'facile'</span>
+    }
+};</pre>
+                    </div>
+                    <div class="floating-element absolute -top-10 -right-10 w-20 h-20 bg-cyan-500/20 rounded-lg backdrop-blur-sm"></div>
+                    <div class="floating-element absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/20 rounded-lg backdrop-blur-sm"></div>
+                    <div class="floating-element absolute top-1/2 right-0 w-16 h-16 bg-purple-500/20 rounded-lg backdrop-blur-sm"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section Éditeur -->
+    <section id="editor-section" class="py-20 container mx-auto px-6">
+        <div class="mb-8 text-center">
+            <h2 class="text-4xl font-bold text-white mb-4">Éditeur de Code Interactif</h2>
+            <p class="text-gray-400">Créez, personnalisez et exportez vos snippets de code en quelques clics</p>
+        </div>
+        
+        <div class="code-editor-container bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden">
+            <!-- Barre d'outils principale -->
+            <div class="flex justify-between items-center p-4 bg-slate-900/50">
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <select id="languageSelect" class="bg-slate-700 text-gray-300 rounded px-3 py-1">
+                        <option value="javascript">JavaScript</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="python">Python</option>
+                        <option value="php">PHP</option>
+                    </select>
+                </div>
+                <div class="flex space-x-4">
+                    <select id="themeSelect" class="bg-slate-700 text-gray-300 rounded px-3 py-1">
+                        <option value="monokai">Monokai</option>
+                        <option value="dracula">Dracula</option>
+                        <option value="github">GitHub</option>
+                        <option value="tomorrow_night">Tomorrow Night</option>
+                        <option value="solarized_dark">Solarized Dark</option>
+                    </select>
+                    <button id="shareCode" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 rounded transition-colors flex items-center gap-2">
+                        <i class="fas fa-share-alt"></i>
+                        Partager URL
+                    </button>
+                    <button id="copyCode" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded transition-colors flex items-center gap-2">
+                        <i class="fas fa-copy"></i>
+                        Copier
+                    </button>
+                    <div class="border-l border-slate-600 mx-2"></div>
+                    <button id="exportPNG" class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-1 rounded transition-colors flex items-center gap-2">
+                        <i class="fas fa-image"></i>
+                        PNG
+                    </button>
+                    <button id="exportJPG" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded transition-colors flex items-center gap-2">
+                        <i class="fas fa-file-image"></i>
+                        JPG
+                    </button>
+                </div>
+            </div>
+
+            <!-- Système d'onglets -->
+            <div class="flex items-center bg-slate-900/70 px-2 pt-2">
+                <div id="tabs-container" class="flex-1 flex items-center space-x-2 overflow-x-auto">
+                    <!-- Les onglets seront ajoutés ici dynamiquement -->
+                </div>
+                <button id="addTab" class="ml-2 p-2 text-gray-400 hover:text-cyan-400 transition-colors">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Éditeur -->
+            <div id="editor" class="w-full h-96"></div>
+
+            <div class="p-4 bg-slate-900/50 flex justify-between items-center">
+                <div class="text-gray-400 text-sm">
+                    <span id="lineCount">0 lignes</span> | 
+                    <span id="charCount">0 caractères</span>
+                </div>
+                <button id="clearCode" class="text-red-400 hover:text-red-500 text-sm">
+                    Effacer le code
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-dracula.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-github.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-tomorrow_night.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-solarized_dark.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-typescript.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
